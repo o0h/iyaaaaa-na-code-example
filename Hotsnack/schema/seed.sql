@@ -1,0 +1,66 @@
+-- hotsnack table
+INSERT INTO hotsnack (name, description) VALUES
+                                             ('チーズスティック', 'カリカリと美味しいチーズスティック。'),
+                                             ('ホットドッグ', 'クラシックなホットドッグ、ケチャップとマスタード付き。'),
+                                             ('チキンナゲット', 'ソースと一緒に揚げたチキンナゲット。'),
+                                             ('ピザロール', 'チーズとトマトソースの美味しいピザロールばかり。'),
+                                             ('エッグロール', '野菜を詰めた焼き立てのエッグロール。'),
+                                             ('ソーセージロール', 'ケチャップ付きの美味しいソーセージロール。'),
+                                             ('フライドシュリンプ', 'ターターソースと一緒の揚げたエビ。'),
+                                             ('スプリングロール', 'エビと野菜たっぷりの伝統的なスプリングロール。');
+
+-- user table
+INSERT INTO user (name, email) VALUES
+                                   ('田中 次郎', 'jirosato1@example.com'),
+                                   ('Kim Johnson', 'kimjohnson2@example.com'),
+                                   ('鈴木 恵子', 'keikosuzuki3@example.com'),
+                                   ('Mohamed Ali', 'mohamedali4@example.com'),
+                                   ('佐藤 遥', 'harukasato5@example.com'),
+                                   ('Sophia Lewis', 'sophialewis6@example.com'),
+                                   ('高橋 優', 'yutakahashi7@example.com'),
+                                   ('Carlos Garcia', 'carlosgarcia8@example.com'),
+                                   ('中村 敏弘', 'toshihironakamura9@example.com'),
+                                   ('Antonio Rossi', 'antoniorossi10@example.com'),
+                                   ('伊藤 花子', 'hanakoito11@example.com'),
+                                   ('Marie Martin', 'mariemartin12@example.com'),
+                                   ('山下 大輔', 'daisukeyamashita13@example.com'),
+                                   ("John O\'Reilly", 'johnoreilly14@example.com'),
+                                   ('林 美穂', 'mihohayashi15@example.com'),
+                                   ('James Smith', 'jamessmith16@example.com'),
+                                   ('太田 真治', 'shinjiohta17@example.com'),
+                                   ('Mustafa Kemal', 'mustafakemal18@example.com'),
+                                   ('岡本 忠義', 'chuyasuokamoto19@example.com'),
+                                   ('Sarah Taylor', 'sarahtaylor20@example.com'),
+                                   ('松浦 弘明', 'hiromatsumura21@example.com'),
+                                   ('Wang Wei', 'wangwei22@example.com'),
+                                   ('長谷川 陽子', 'youkohasegawa23@example.com'),
+                                   ('Emma Andersson', 'emmaandersson24@example.com'),
+                                   ('関口 雅彦', 'yasuhikosekiguchi25@example.com'),
+                                   ('Ivan Petrov', 'ivanpetrov26@example.com'),
+                                   ('藤原 洋介', 'yosukefujiwara27@example.com'),
+                                   ('Mary Johnson', 'maryjohnson28@example.com'),
+                                   ('大野 憲', 'kenhono29@example.com'),
+                                   ('Johnathan Davis', 'johnathandavis30@example.com'),
+                                   ('石井 淳', 'atsushiishii31@example.com'),
+                                   ('Michelle Thompson', 'michellethompson32@example.com');
+
+-- vote table
+INSERT INTO vote (user_id, hotsnack_id)
+VALUES
+    (1, 1), (2, 2), (3, 3), (4, 4), (5, 5),
+    (6, 1), (7, 2), (8, 3), (9, 4), (10, 5),
+    (11, 1), (12, 2), (13, 3), (14, 4), (15, 5),
+    (16, 1), (17, 2), (18, 3), (19, 4), (20, 5),
+    (21, 1), (22, 2), (23, 3), (24, 4), (25, 5),
+    (26, 1), (27, 2), (28, 3), (29, 4), (30, 5),
+    (31, 1), (32, 2),
+    (1, 6), (2, 7), (3, 8), (4, 1), (5, 2),
+    (6, 3), (7, 4), (8, 5), (9, 6), (10, 7),
+    (11, 8), (12, 1), (13, 2), (14, 3), (15, 4),
+    (16, 5), (17, 6), (18, 7), (19, 8), (20, 1),
+    (21, 2), (22, 3), (23, 4), (24, 5), (25, 6),
+    (26, 7), (27, 8), (28, 1), (29, 2), (30, 3),
+    (31, 4), (32, 5),
+    (1, 7), (2, 8), (3, 1), (4, 2), (5, 3),
+    (6, 4), (7, 5), (8, 6), (9, 7), (10, 8),
+    (11, 1), (12, 2), (13, 3), (14, 4), (15, 5);

@@ -1,0 +1,27 @@
+@startuml
+
+entity "users" as users {
+  + id : integer
+  --
+  name : text
+  email : text
+}
+
+entity "dishes" as dishes {
+  + id : integer
+  --
+  name : text
+  description : text
+}
+
+entity "votes" as votes {
+  + id : integer
+  --
+  user_id : integer
+  dish_id : integer
+}
+
+users ||..|| votes : user_id
+dishes ||..|| votes : dish_id
+
+@enduml

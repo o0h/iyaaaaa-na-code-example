@@ -1,0 +1,35 @@
+{
+    "name": "o0h/iyaaaaa-na-code-example",
+    "description": "いや〜なコードを書いています",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "ext-pdo": "*",
+        "ext-sqlite3": "*",
+        "aura/sqlquery": "@stable"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "@stable",
+        "phpstan/phpstan": "@stable",
+        "phpunit/phpunit": "@stable"
+    },
+    "scripts": {
+        "server": "php -d max_execution_time=0 -S localhost:8080 webroot/index.php",
+        "cs-fix": "php-cs-fixer fix"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "O0h\\IyaaaaaNaCodeExample\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hideki Kinjyo",
+            "email": "dev@o0h.in"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    }
+}
