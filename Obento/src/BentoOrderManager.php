@@ -22,36 +22,29 @@ class BentoOrderManager
 
     public function finalizeOrders(): void
     {
-        $this->applyVoucher();
-        foreach ($this->orders as $order) {
-            $order->registerOrder();
-        }
-    }
+        if ($this->usingVoucher) {
+            $maxPriceOrder = null;
+            $maxPrice = 0;
+            $voucherApplied = false;
 
-    private function applyVoucher(): void
-    {
-        if (!$this->usingVoucher) {
-            return;
-        }
+            foreach ($this->orders as $order) {
+                if ($order->isVoucherApplicable() && $order->getBasePrice() > $maxPrice) {
+                    $maxPriceOrder = $order;
+                    $maxPrice = $order->getBasePrice();
+                }
+            }
 
-        $maxPriceOrder = null;
-        $maxPrice = 0;
-        $voucherApplied = false;
+            if ($maxPriceOrder) {
+                $maxPriceOrder->applyVoucher();
+                $voucherApplied = true;
+            }
 
-        foreach ($this->orders as $order) {
-            if ($order->isVoucherApplicable() && $order->getBasePrice() > $maxPrice) {
-                $maxPriceOrder = $order;
-                $maxPrice = $order->getBasePrice();
+            if ($this->usingVoucher && !$voucherApplied) {
+                echo "引換券を利用する条件を満たす注文がありません。\n";
             }
         }
-
-        if ($maxPriceOrder) {
-            $maxPriceOrder->applyVoucher();
-            $voucherApplied = true;
-        }
-
-        if ($this->usingVoucher && !$voucherApplied) {
-            echo "引換券を利用する条件を満たす注文がありません。\n";
+        foreach ($this->orders as $order) {
+            $order->registerOrder();
         }
     }
 }
