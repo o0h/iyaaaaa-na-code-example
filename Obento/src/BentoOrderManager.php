@@ -39,10 +39,15 @@ class BentoOrderManager
 
         // 引換券での引き換え対象のうち、最高価格の注文を選別する
         foreach ($this->orders as $order) {
-            if ($order->isVoucherApplicable() && $order->getBasePrice() > $maxPrice) {
-                $toApplyVoucher = $order;
-                $maxPrice = $order->getBasePrice();
+            if (!$order->isVoucherApplicable()) {
+                continue;
             }
+            
+            if ($order->getBasePrice() <= $maxPrice) {
+                continue;
+            }
+
+            $toApplyVoucher = $order;
         }
 
         return $toApplyVoucher;
