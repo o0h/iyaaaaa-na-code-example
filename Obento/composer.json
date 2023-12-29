@@ -1,0 +1,29 @@
+{
+    "name": "o0h/iyaaaaa-na-code-esample-obento",
+    "description": "いや〜なコードを書いています",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "@stable",
+        "friendsofphp/php-cs-fixer": "@stable",
+      "ext-pdo": "*",
+        "phpmetrics/phpmetrics": "@stable"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "O0h\\Obento\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hideki Kinjyo",
+            "email": "dev@o0h.in"
+        }
+    ],
+    "scripts": {
+        "test" : "phpunit tests/"
+    },
+    "require": {
+        "cakephp/chronos": "^2.4"
+    }
+}
