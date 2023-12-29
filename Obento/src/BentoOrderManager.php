@@ -34,7 +34,7 @@ class BentoOrderManager
 
     private function getOrderToApplyVoucher()
     {
-        $toApplyVoucher = null;
+        $candidate = null;
 
         // 引換券での引き換え対象のうち、最高価格の注文を選別する
         foreach ($this->orders as $order) {
@@ -42,13 +42,13 @@ class BentoOrderManager
                 continue;
             }
 
-            if ($order->getBasePrice() <= $toApplyVoucher?->getBasePrice()) {
+            if ($order->getBasePrice() <= $candidate?->getBasePrice()) {
                 continue;
             }
 
-            $toApplyVoucher = $order;
+            $candidate = $order;
         }
 
-        return $toApplyVoucher;
+        return $candidate;
     }
 }
