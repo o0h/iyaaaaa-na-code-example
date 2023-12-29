@@ -7,12 +7,10 @@ namespace O0h\Obento;
 class BentoOrderManager
 {
     private $orders;
-    private $usingVoucher;
 
-    public function __construct($usingVoucher = false)
+    public function __construct()
     {
         $this->orders = [];
-        $this->usingVoucher = $usingVoucher;
     }
 
     public function addOrder($order): void
@@ -20,9 +18,9 @@ class BentoOrderManager
         $this->orders[] = $order;
     }
 
-    public function finalizeOrders(): void
+    public function finalizeOrders(bool $usingVoucher = false): void
     {
-        if ($this->usingVoucher) {
+        if ($usingVoucher) {
             $maxPriceOrder = null;
             $maxPrice = 0;
             $voucherApplied = false;
@@ -39,7 +37,7 @@ class BentoOrderManager
                 $voucherApplied = true;
             }
 
-            if ($this->usingVoucher && !$voucherApplied) {
+            if ($usingVoucher && !$voucherApplied) {
                 echo "引換券を利用する条件を満たす注文がありません。\n";
             }
         }

@@ -453,13 +453,13 @@ final class IntegrationTest extends TestCase
     {
         $db = new BentoDB();
 
-        $orderManager = new BentoOrderManager(true);
+        $orderManager = new BentoOrderManager();
 
         $order = new BentoOrder(1, 'bento', 1, [], 800, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
-        $orderManager->finalizeOrders();
+        $orderManager->finalizeOrders(true);
         ob_end_clean();
 
         $order = $this->getLatestOrders(1)[0];
@@ -499,7 +499,7 @@ final class IntegrationTest extends TestCase
     {
         $db = new BentoDB();
 
-        $orderManager = new BentoOrderManager(true);
+        $orderManager = new BentoOrderManager();
 
         $order = new BentoOrder(1, 'bento', 1, [], 800, $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
@@ -507,7 +507,7 @@ final class IntegrationTest extends TestCase
         $orderManager->addOrder($order);
 
         ob_start();
-        $orderManager->finalizeOrders();
+        $orderManager->finalizeOrders(true);
         ob_end_clean();
 
         $orders = $this->getLatestOrders(2);
@@ -526,13 +526,13 @@ final class IntegrationTest extends TestCase
     {
         $db = new BentoDB();
 
-        $orderManager = new BentoOrderManager(true);
+        $orderManager = new BentoOrderManager();
 
         $order = new BentoOrder(1, 'bento', 3, [4], 800, $db, false, true, false, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
-        $orderManager->finalizeOrders();
+        $orderManager->finalizeOrders(true);
         ob_end_clean();
 
         $order = $this->getLatestOrders(1)[0];
