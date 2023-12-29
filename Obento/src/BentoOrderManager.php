@@ -6,12 +6,7 @@ namespace O0h\Obento;
 
 class BentoOrderManager
 {
-    private $orders;
-
-    public function __construct()
-    {
-        $this->orders = [];
-    }
+    private $orders = [];
 
     public function addOrder($order): void
     {
