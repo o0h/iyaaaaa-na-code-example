@@ -15,20 +15,24 @@ class BentoOrderManager
 
     public function finalizeOrders(bool $usingVoucher = false): void
     {
-        // 引換券を利用したい場合は
         if ($usingVoucher) {
-            $toApplyVoucher = $this->getOrderToApplyVoucher();
-            // 対象があれば、引換券を適用する
-            if ($toApplyVoucher) {
-                $toApplyVoucher->applyVoucher();
-            } else { // 対象がなければエラーメッセージを出力する
-                echo "引換券を利用する条件を満たす注文がありません。\n";
-            }
+            $this->useVoucher();
         }
 
         // 注文を保存する
         foreach ($this->orders as $order) {
             $order->registerOrder();
+        }
+    }
+
+    private function useVoucher()
+    {
+        $toApplyVoucher = $this->getOrderToApplyVoucher();
+        // 対象があれば、引換券を適用する
+        if ($toApplyVoucher) {
+            $toApplyVoucher->applyVoucher();
+        } else { // 対象がなければエラーメッセージを出力する
+            echo "引換券を利用する条件を満たす注文がありません。\n";
         }
     }
 
