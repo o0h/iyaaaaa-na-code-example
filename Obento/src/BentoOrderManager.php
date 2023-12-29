@@ -23,7 +23,6 @@ class BentoOrderManager
         if ($usingVoucher) {
             $maxPriceOrder = null;
             $maxPrice = 0;
-            $voucherApplied = false;
 
             foreach ($this->orders as $order) {
                 if ($order->isVoucherApplicable() && $order->getBasePrice() > $maxPrice) {
@@ -34,10 +33,7 @@ class BentoOrderManager
 
             if ($maxPriceOrder) {
                 $maxPriceOrder->applyVoucher();
-                $voucherApplied = true;
-            }
-
-            if (!$voucherApplied) {
+            } else {
                 echo "引換券を利用する条件を満たす注文がありません。\n";
             }
         }
