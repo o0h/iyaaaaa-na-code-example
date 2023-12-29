@@ -20,7 +20,15 @@ class BentoOrderManager
         $this->orders[] = $order;
     }
 
-    public function applyVoucher(): void
+    public function finalizeOrders(): void
+    {
+        $this->applyVoucher();
+        foreach ($this->orders as $order) {
+            $order->registerOrder();
+        }
+    }
+
+    private function applyVoucher(): void
     {
         if (!$this->usingVoucher) {
             return;
@@ -44,14 +52,6 @@ class BentoOrderManager
 
         if ($this->usingVoucher && !$voucherApplied) {
             echo "引換券を利用する条件を満たす注文がありません。\n";
-        }
-    }
-
-    public function finalizeOrders(): void
-    {
-        $this->applyVoucher();
-        foreach ($this->orders as $order) {
-            $order->registerOrder();
         }
     }
 }
