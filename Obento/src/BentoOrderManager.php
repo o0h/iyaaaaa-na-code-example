@@ -28,12 +28,12 @@ class BentoOrderManager
     private function useVoucher()
     {
         $toApplyVoucher = $this->getOrderToApplyVoucher();
-        // 対象があれば、引換券を適用する
-        if ($toApplyVoucher) {
-            $toApplyVoucher->applyVoucher();
-        } else { // 対象がなければエラーメッセージを出力する
+        if (!$toApplyVoucher) {
             echo "引換券を利用する条件を満たす注文がありません。\n";
+            return;
         }
+
+        $toApplyVoucher->applyVoucher();
     }
 
     private function getOrderToApplyVoucher()
