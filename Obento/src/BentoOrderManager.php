@@ -37,7 +37,7 @@ class BentoOrderManager
                 $voucherApplied = true;
             }
 
-            if ($usingVoucher && !$voucherApplied) {
+            if (!$voucherApplied) {
                 echo "引換券を利用する条件を満たす注文がありません。\n";
             }
         }
