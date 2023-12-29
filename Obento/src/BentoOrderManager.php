@@ -17,21 +17,10 @@ class BentoOrderManager
     {
         // 引換券を利用したい場合は
         if ($usingVoucher) {
-            // 引換券を適用する対象となる注文を選別して
-            $maxPriceOrder = null;
-            $maxPrice = 0;
-
-            foreach ($this->orders as $order) {
-                // 引換券での引き換え対象のうち、最高価格の注文を選別する
-                if ($order->isVoucherApplicable() && $order->getBasePrice() > $maxPrice) {
-                    $maxPriceOrder = $order;
-                    $maxPrice = $order->getBasePrice();
-                }
-            }
-
+            $toApplyVoucher = $this->getOrderToApplyVoucher();
             // 対象があれば、引換券を適用する
-            if ($maxPriceOrder) {
-                $maxPriceOrder->applyVoucher();
+            if ($toApplyVoucher) {
+                $toApplyVoucher->applyVoucher();
             } else { // 対象がなければエラーメッセージを出力する
                 echo "引換券を利用する条件を満たす注文がありません。\n";
             }
@@ -41,5 +30,21 @@ class BentoOrderManager
         foreach ($this->orders as $order) {
             $order->registerOrder();
         }
+    }
+
+    private function getOrderToApplyVoucher()
+    {
+        $toApplyVoucher = null;
+        $maxPrice = 0;
+
+        // 引換券での引き換え対象のうち、最高価格の注文を選別する
+        foreach ($this->orders as $order) {
+            if ($order->isVoucherApplicable() && $order->getBasePrice() > $maxPrice) {
+                $toApplyVoucher = $order;
+                $maxPrice = $order->getBasePrice();
+            }
+        }
+
+        return $toApplyVoucher;
     }
 }
