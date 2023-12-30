@@ -6,21 +6,19 @@ namespace O0h\Obento;
 
 class BentoOrder
 {
-    private $quantity;
-    private $customizationIds;
-    private readonly BentoData $bentoData;
-    private readonly BentoOrderContextData $orderContext;
-    private BentoOrderPriceCalculator $calculator;
-    private BentoOrderValidator $validator;
-    private BentoOrderRegister $register;
-
-    public function __construct($productId, $quantity, $customizationIds, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
-    {
-        $this->quantity = $quantity;
-        $this->customizationIds = $customizationIds;
-
-        $this->bentoData = $db->getProductInfo($productId);
-        $this->orderContext = new BentoOrderContextData(
+    public static function create(
+        $productId,
+        $quantity,
+        $customizationIds,
+        BentoDB $db,
+        $isVipCustomer = false,
+        $isPreOrder = false,
+        $needsChopsticks = false,
+        $pickupTime = null,
+        $paymentMethod = 'cash'
+    ): self {
+        $bentoData = $db->getProductInfo($productId);
+        $orderContext = new BentoOrderContextData(
             $isVipCustomer,
             $isPreOrder,
             $needsChopsticks,
@@ -28,19 +26,31 @@ class BentoOrder
             $paymentMethod,
         );
         $customizationFilter = new CustomizationFilter($db);
-        $this->customizationIds = $customizationFilter->onlyValid($this->bentoData->id, $customizationIds);
+        $customizationIds = $customizationFilter->onlyValid($bentoData->id, $customizationIds);
 
-        $this->validator = new BentoOrderValidator($productId, $quantity, $this->orderContext->isPreOrder, $db);
+        $validator = new BentoOrderValidator($productId, $quantity, $orderContext->isPreOrder, $db);
 
-        $this->calculator = new BentoOrderPriceCalculator(
-            $this->bentoData,
-            $this->quantity,
-            $this->customizationIds,
-            $this->orderContext,
+        $calculator = new BentoOrderPriceCalculator(
+            $bentoData,
+            $quantity,
+            $customizationIds,
+            $orderContext,
             $db,
         );
-        $this->register = new BentoOrderRegister($db);
+        $register = new BentoOrderRegister($db);
+
+        return new self($bentoData, $quantity, $customizationIds, $orderContext, $calculator, $validator, $register);
     }
+
+    private function __construct(
+        private readonly BentoData $bentoData,
+        private readonly int $quantity,
+        private readonly array $customizationIds,
+        private readonly BentoOrderContextData $orderContext,
+        private readonly BentoOrderPriceCalculator $calculator,
+        private readonly BentoOrderValidator $validator,
+        private readonly BentoOrderRegister $register,
+    ) {}
 
     public function isOrderAcceptable()
     {
