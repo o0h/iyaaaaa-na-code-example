@@ -70,9 +70,6 @@ class BentoOrder
     {
         if ($this->isOrderAcceptable()) {
             $totalPrice = $this->calculator->calculateTotalPrice();
-            if ($this->voucherApplied) {
-                $totalPrice -= $this->getBasePrice();
-            }
             $this->db->addOrder(
                 $this->productId,
                 $this->quantity,
@@ -108,9 +105,7 @@ class BentoOrder
 
     public function applyVoucher(): void
     {
-        if ($this->isVoucherApplicable()) {
-            $this->voucherApplied = true;
-        }
+        $this->calculator->applyVoucher();
     }
 
     private function isTimeSale()

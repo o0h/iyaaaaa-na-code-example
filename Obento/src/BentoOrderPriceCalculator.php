@@ -64,6 +64,10 @@ class BentoOrderPriceCalculator
             $totalPrice -= 50;
         }
 
+        if ($this->voucherApplied) {
+            $totalPrice -= $this->getBasePrice();
+        }
+
         return (int)ceil($totalPrice);
     }
 
