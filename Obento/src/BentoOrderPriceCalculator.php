@@ -44,11 +44,6 @@ class BentoOrderPriceCalculator
             if (BentoDB::BENTO_KARAAGE_TOKUDAI_ID === $this->productId && BentoDB::CUSTOMIZE_GOHAN_OOMORI_ID === $customizationId) {
                 continue;
             }
-            if (!$this->db->isValidCustomization($this->productId, $customizationId)) {
-                unset($this->customizationIds[$i]);
-
-                continue;
-            }
             if ($productType === 'bento' && $customizationId === BentoDB::CUSTOMIZE_OCHA_ID) {
                 $hasTea = true;
             }

@@ -93,6 +93,11 @@ class BentoOrder
     public function registerOrder(): void
     {
         if ($this->isOrderAcceptable()) {
+            foreach ($this->customizationIds as $i => $customizationId) {
+                if (!$this->db->isValidCustomization($this->productId, $customizationId)) {
+                    unset($this->customizationIds[$i]);
+                }
+            }
             $calculator = new BentoOrderPriceCalculator(
                 $this->productId,
                 $this->productType,
