@@ -21,6 +21,7 @@ class BentoOrder
 
     private bool $voucherApplied = false;
     private $basePrice;
+    private BentoOrderPriceCalculator $calculator;
 
     public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
     {
@@ -35,6 +36,22 @@ class BentoOrder
         $this->pickupTime = $pickupTime;
         $this->paymentMethod = $paymentMethod;
         $this->basePrice = $basePrice;
+
+        foreach ($this->customizationIds as $i => $customizationId) {
+            if (!$this->db->isValidCustomization($this->productId, $customizationId)) {
+                unset($this->customizationIds[$i]);
+            }
+        }
+        $this->calculator = new BentoOrderPriceCalculator(
+            $this->productId,
+            $this->productType,
+            $this->quantity,
+            $this->customizationIds,
+            $this->basePrice,
+            $this->db,
+            $this->isVipCustomer,
+            $this->isPreOrder,
+        );
     }
 
     public function isOrderAcceptable()
@@ -52,22 +69,7 @@ class BentoOrder
     public function registerOrder(): void
     {
         if ($this->isOrderAcceptable()) {
-            foreach ($this->customizationIds as $i => $customizationId) {
-                if (!$this->db->isValidCustomization($this->productId, $customizationId)) {
-                    unset($this->customizationIds[$i]);
-                }
-            }
-            $calculator = new BentoOrderPriceCalculator(
-                $this->productId,
-                $this->productType,
-                $this->quantity,
-                $this->customizationIds,
-                $this->basePrice,
-                $this->db,
-                $this->isVipCustomer,
-                $this->isPreOrder,
-            );
-            $totalPrice = $calculator->calculateTotalPrice();
+            $totalPrice = $this->calculator->calculateTotalPrice();
             if ($this->voucherApplied) {
                 $totalPrice -= $this->getBasePrice();
             }
