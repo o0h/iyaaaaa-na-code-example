@@ -17,6 +17,7 @@ class BentoOrder
 
     private BentoOrderPriceCalculator $calculator;
     private BentoOrderValidator $validator;
+    private BentoOrderRegister $register;
 
     public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
     {
@@ -43,6 +44,7 @@ class BentoOrder
             $isVipCustomer,
             $this->isPreOrder,
         );
+        $this->register = new BentoOrderRegister($this->db);
     }
 
     public function isOrderAcceptable()
@@ -54,14 +56,14 @@ class BentoOrder
     {
         if ($this->isOrderAcceptable()) {
             $totalPrice = $this->calculator->calculateTotalPrice();
-            $this->db->addOrder(
+            $this->register->register(
                 $this->productId,
                 $this->quantity,
                 $this->customizationIds,
                 $totalPrice,
                 $this->paymentMethod,
                 $this->pickupTime,
-                $this->isPreOrder ? 1 : 0
+                $this->isPreOrder,
             );
             $message = '注文が完了しました ID: ' . $this->productId . '、数量: ' . $this->quantity;
             if ($this->needsChopsticks) {
