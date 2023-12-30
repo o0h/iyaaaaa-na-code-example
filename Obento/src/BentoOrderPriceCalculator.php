@@ -11,18 +11,15 @@ class BentoOrderPriceCalculator
     private $db;
     private $quantity;
     private $customizationIds;
-    private $isVipCustomer;
-    private $isPreOrder;
-
+    private BentoOrderContextData $orderContext;
     private bool $voucherApplied = false;
 
-    public function __construct(private BentoData $bento, $quantity, $customizationIds, BentoDB $db, $isVipCustomer = false, $isPreOrder = false)
+    public function __construct(private BentoData $bento, $quantity, $customizationIds, BentoOrderContextData $orderContext, BentoDB $db)
     {
         $this->quantity = $quantity;
         $this->customizationIds = $customizationIds;
         $this->db = $db;
-        $this->isVipCustomer = $isVipCustomer;
-        $this->isPreOrder = $isPreOrder;
+        $this->orderContext = $orderContext;
     }
 
     public function calculateTotalPrice()
@@ -40,13 +37,13 @@ class BentoOrderPriceCalculator
             $customizationPrice = $this->db->getCustomizationPrice($customizationId);
             $totalPrice += $customizationPrice * $this->quantity;
         }
-        if ($this->isVipCustomer) {
+        if ($this->orderContext->isVipCustomer) {
             $totalPrice *= 0.95;
         }
         if ($this->quantity >= 5 && 'bento' === $this->bento->type) {
             $totalPrice -= 300;
         }
-        if ($this->bento->saleFlag && !$this->isPreOrder && $this->isTimeSale()) {
+        if ($this->bento->saleFlag && !$this->orderContext->isPreOrder && $this->isTimeSale()) {
             $totalPrice -= 120;
         }
 

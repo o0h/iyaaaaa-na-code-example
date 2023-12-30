@@ -8,12 +8,8 @@ class BentoOrder
 {
     private $quantity;
     private $customizationIds;
-    private $isPreOrder;
-    private $needsChopsticks;
-    private $pickupTime;
-    private $paymentMethod;
-
     private readonly BentoData $bentoData;
+    private readonly BentoOrderContextData $orderContext;
     private BentoOrderPriceCalculator $calculator;
     private BentoOrderValidator $validator;
     private BentoOrderRegister $register;
@@ -22,24 +18,26 @@ class BentoOrder
     {
         $this->quantity = $quantity;
         $this->customizationIds = $customizationIds;
-        $this->isPreOrder = $isPreOrder;
-        $this->needsChopsticks = $needsChopsticks;
-        $this->pickupTime = $pickupTime;
-        $this->paymentMethod = $paymentMethod;
 
         $this->bentoData = $db->getProductInfo($productId);
+        $this->orderContext = new BentoOrderContextData(
+            $isVipCustomer,
+            $isPreOrder,
+            $needsChopsticks,
+            $pickupTime,
+            $paymentMethod,
+        );
         $customizationFilter = new CustomizationFilter($db);
         $this->customizationIds = $customizationFilter->onlyValid($this->bentoData->id, $customizationIds);
 
-        $this->validator = new BentoOrderValidator($productId, $quantity, $isPreOrder, $db);
+        $this->validator = new BentoOrderValidator($productId, $quantity, $this->orderContext->isPreOrder, $db);
 
         $this->calculator = new BentoOrderPriceCalculator(
             $this->bentoData,
             $this->quantity,
             $this->customizationIds,
+            $this->orderContext,
             $db,
-            $isVipCustomer,
-            $this->isPreOrder,
         );
         $this->register = new BentoOrderRegister($db);
     }
@@ -58,15 +56,13 @@ class BentoOrder
                 $this->quantity,
                 $this->customizationIds,
                 $totalPrice,
-                $this->paymentMethod,
-                $this->pickupTime,
-                $this->isPreOrder,
+                $this->orderContext,
             );
             $message = '注文が完了しました ID: ' . $this->bentoData->id . '、数量: ' . $this->quantity;
-            if ($this->needsChopsticks) {
+            if ($this->orderContext->needsChopsticks) {
                 $message .= '(割り箸が必要)';
             }
-            $message .= '、合計金額: ' . $totalPrice . '円、支払い方法: ' . $this->paymentMethod;
+            $message .= '、合計金額: ' . $totalPrice . '円、支払い方法: ' . $this->orderContext->paymentMethod;
             echo $message . "\n";
         } else {
             echo "申し訳ありません、在庫が不足しています。\n";

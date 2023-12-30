@@ -13,18 +13,16 @@ class BentoOrderRegister
         $quantity,
         $customizationIds,
         $totalPrice,
-        $paymentMethod,
-        $pickupTime,
-        $isPreOrder,
+        BentoOrderContextData $orderContext,
     ): void {
         $this->db->addOrder(
             $productId,
             $quantity,
             $customizationIds,
             $totalPrice,
-            $paymentMethod,
-            $pickupTime,
-            $isPreOrder ? 1 : 0
+            $orderContext->paymentMethod,
+            $orderContext->pickupTime,
+            $orderContext->isPreOrder ? 1 : 0
         );
     }
 }
