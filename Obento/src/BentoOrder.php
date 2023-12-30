@@ -93,7 +93,17 @@ class BentoOrder
     public function registerOrder(): void
     {
         if ($this->isOrderAcceptable()) {
-            $totalPrice = $this->calculateTotalPrice();
+            $calculator = new BentoOrderPriceCalculator(
+                $this->productId,
+                $this->productType,
+                $this->quantity,
+                $this->customizationIds,
+                $this->basePrice,
+                $this->db,
+                $this->isVipCustomer,
+                $this->isPreOrder,
+            );
+            $totalPrice = $calculator->calculateTotalPrice();
             if ($this->voucherApplied) {
                 $totalPrice -= $this->getBasePrice();
             }
