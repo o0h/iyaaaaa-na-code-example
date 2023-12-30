@@ -17,7 +17,6 @@ class BentoOrder
     private $paymentMethod;
     private $productType;
 
-    private $basePrice;
     private BentoOrderPriceCalculator $calculator;
 
     public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
@@ -32,7 +31,6 @@ class BentoOrder
         $this->needsChopsticks = $needsChopsticks;
         $this->pickupTime = $pickupTime;
         $this->paymentMethod = $paymentMethod;
-        $this->basePrice = $basePrice;
 
         foreach ($this->customizationIds as $i => $customizationId) {
             if (!$this->db->isValidCustomization($this->productId, $customizationId)) {
@@ -44,7 +42,7 @@ class BentoOrder
             $this->productType,
             $this->quantity,
             $this->customizationIds,
-            $this->basePrice,
+            $basePrice,
             $this->db,
             $this->isVipCustomer,
             $this->isPreOrder,
@@ -89,7 +87,7 @@ class BentoOrder
 
     public function getBasePrice()
     {
-        return $this->basePrice;
+        return $this->calculator->getBasePrice();
     }
 
     public function isVoucherApplicable()
