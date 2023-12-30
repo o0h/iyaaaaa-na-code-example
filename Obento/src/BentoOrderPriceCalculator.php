@@ -14,15 +14,12 @@ class BentoOrderPriceCalculator
     private $customizationIds;
     private $isVipCustomer;
     private $isPreOrder;
-    private $needsChopsticks;
-    private $pickupTime;
-    private $paymentMethod;
     private $productType;
 
     private bool $voucherApplied = false;
     private $basePrice;
 
-    public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
+    public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false)
     {
         $this->productId = $productId;
         $this->productType = $productType;
@@ -31,22 +28,7 @@ class BentoOrderPriceCalculator
         $this->db = $db;
         $this->isVipCustomer = $isVipCustomer;
         $this->isPreOrder = $isPreOrder;
-        $this->needsChopsticks = $needsChopsticks;
-        $this->pickupTime = $pickupTime;
-        $this->paymentMethod = $paymentMethod;
         $this->basePrice = $basePrice;
-    }
-
-    public function isOrderAcceptable()
-    {
-        if ($this->db->isReservationOnly($this->productId) && !$this->isPreOrder) {
-            return false;
-        }
-        $stockData = $this->db->getStock($this->productId);
-        $currentStock = $stockData['stock'] ?? 0;
-        $reservedStock = $stockData['reserved_stock'] ?? 0;
-
-        return $currentStock - $reservedStock >= $this->quantity;
     }
 
     public function calculateTotalPrice()
@@ -88,33 +70,6 @@ class BentoOrderPriceCalculator
         }
 
         return (int)ceil($totalPrice);
-    }
-
-    public function registerOrder(): void
-    {
-        if ($this->isOrderAcceptable()) {
-            $totalPrice = $this->calculateTotalPrice();
-            if ($this->voucherApplied) {
-                $totalPrice -= $this->getBasePrice();
-            }
-            $this->db->addOrder(
-                $this->productId,
-                $this->quantity,
-                array_values($this->customizationIds),
-                $totalPrice,
-                $this->paymentMethod,
-                $this->pickupTime,
-                $this->isPreOrder ? 1 : 0
-            );
-            $message = '注文が完了しました ID: ' . $this->productId . '、数量: ' . $this->quantity;
-            if ($this->needsChopsticks) {
-                $message .= '(割り箸が必要)';
-            }
-            $message .= '、合計金額: ' . $totalPrice . '円、支払い方法: ' . $this->paymentMethod;
-            echo $message . "\n";
-        } else {
-            echo "申し訳ありません、在庫が不足しています。\n";
-        }
     }
 
     public function getBasePrice()
