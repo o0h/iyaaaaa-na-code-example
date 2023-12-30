@@ -6,8 +6,6 @@ namespace O0h\Obento;
 
 class BentoOrder
 {
-    private $db;
-    private $productId; // 商品ID
     private $quantity;
     private $customizationIds;
     private $isPreOrder;
@@ -15,37 +13,35 @@ class BentoOrder
     private $pickupTime;
     private $paymentMethod;
 
+    private readonly BentoData $bentoData;
     private BentoOrderPriceCalculator $calculator;
     private BentoOrderValidator $validator;
     private BentoOrderRegister $register;
 
-    public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
+    public function __construct($productId, $quantity, $customizationIds, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
     {
-        $this->productId = $productId;
         $this->quantity = $quantity;
         $this->customizationIds = $customizationIds;
-        $this->db = $db;
         $this->isPreOrder = $isPreOrder;
         $this->needsChopsticks = $needsChopsticks;
         $this->pickupTime = $pickupTime;
         $this->paymentMethod = $paymentMethod;
 
-        $customizationFilter = new CustomizationFilter($this->db);
-        $this->customizationIds = $customizationFilter->onlyValid($this->productId, $customizationIds);
+        $this->bentoData = $db->getProductInfo($productId);
+        $customizationFilter = new CustomizationFilter($db);
+        $this->customizationIds = $customizationFilter->onlyValid($this->bentoData->id, $customizationIds);
 
         $this->validator = new BentoOrderValidator($productId, $quantity, $isPreOrder, $db);
 
         $this->calculator = new BentoOrderPriceCalculator(
-            $this->productId,
-            $productType,
+            $this->bentoData,
             $this->quantity,
             $this->customizationIds,
-            $basePrice,
-            $this->db,
+            $db,
             $isVipCustomer,
             $this->isPreOrder,
         );
-        $this->register = new BentoOrderRegister($this->db);
+        $this->register = new BentoOrderRegister($db);
     }
 
     public function isOrderAcceptable()
@@ -58,7 +54,7 @@ class BentoOrder
         if ($this->isOrderAcceptable()) {
             $totalPrice = $this->calculator->calculateTotalPrice();
             $this->register->register(
-                $this->productId,
+                $this->bentoData->id,
                 $this->quantity,
                 $this->customizationIds,
                 $totalPrice,
@@ -66,7 +62,7 @@ class BentoOrder
                 $this->pickupTime,
                 $this->isPreOrder,
             );
-            $message = '注文が完了しました ID: ' . $this->productId . '、数量: ' . $this->quantity;
+            $message = '注文が完了しました ID: ' . $this->bentoData->id . '、数量: ' . $this->quantity;
             if ($this->needsChopsticks) {
                 $message .= '(割り箸が必要)';
             }

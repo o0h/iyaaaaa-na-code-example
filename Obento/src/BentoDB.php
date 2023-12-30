@@ -84,11 +84,23 @@ class BentoDB
         $this->dba->prepare('INSERT INTO orders (product_id, quantity, customizations, price, payment_method, pickup_time, order_date, is_pre_order) VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, ?)')->execute([$p, $q, json_encode($c), $pr, $pm, $pt, $ip]);
     }
 
-    public function getProductInfo($productId)
+    public function getProductInfo($productId): ?BentoData
     {
         $stmt = $this->dba->prepare('SELECT * FROM bento_products WHERE id = ?');
         $stmt->execute([$productId]);
 
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if (!$data) {
+            return null;
+        }
+
+        return new BentoData(
+            $data['id'],
+            $data['name'],
+            $data['price'],
+            (bool)$data['sale_flag'],
+            $data['product_type'],
+            (bool)$data['reservation_only'],
+        );
     }
 }

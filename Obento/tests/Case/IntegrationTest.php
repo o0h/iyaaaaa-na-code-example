@@ -34,7 +34,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 800, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
 
         $orderManager->finalizeOrders();
@@ -60,9 +60,9 @@ final class IntegrationTest extends TestCase
         $db = new BentoDB();
         $orderManager = new BentoOrderManager();
 
-        $order = new BentoOrder(1, 'bento', 1, [], 800, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder(1, 1, [], $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
-        $order = new BentoOrder(2, 'bento', 1, [], 850, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder(2, 1, [], $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -94,7 +94,7 @@ final class IntegrationTest extends TestCase
         $db = new BentoDB();
         $orderManager = new BentoOrderManager();
 
-        $order = new BentoOrder(1, 'bento', 1, [], 800, $db, false, false, false, null, 'e_money');
+        $order = new BentoOrder(1, 1, [], $db, false, false, false, null, 'e_money');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -124,7 +124,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1000, $customizationIds, 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1000, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         $orderManager->finalizeOrders();
@@ -143,7 +143,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [1, 3];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -165,7 +165,7 @@ final class IntegrationTest extends TestCase
         $db = new BentoDB();
 
         $orderManager = new BentoOrderManager();
-        $order = new BentoOrder(1, 'bento', 1, [1, 3], 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder(1, 1, [1, 3], $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -186,7 +186,7 @@ final class IntegrationTest extends TestCase
         $db = new BentoDB();
 
         $orderManager = new BentoOrderManager();
-        $order = new BentoOrder(9, 'bento', 1, [1, 4], 650, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder(9, 1, [1, 4], $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -212,7 +212,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [6];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -237,7 +237,7 @@ final class IntegrationTest extends TestCase
         $productId = BentoDB::BENTO_KARAAGE_TOKUDAI_ID;
         $customizationIds = [BentoDB::CUSTOMIZE_GOHAN_OOMORI_ID];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 900, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -262,7 +262,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [1, 3];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 800, $db, true, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, true, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -287,7 +287,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [BentoDB::CUSTOMIZE_OCHA_ID];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -312,7 +312,7 @@ final class IntegrationTest extends TestCase
         $productId = 6;
         $customizationIds = [BentoDB::CUSTOMIZE_OCHA_ID];
 
-        $order = new BentoOrder($productId, 'sozai', 1, $customizationIds, 200, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -336,7 +336,7 @@ final class IntegrationTest extends TestCase
 
         $productId = 1;
 
-        $order = new BentoOrder($productId, 'bento', 5, [], 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 5, [], $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -362,7 +362,7 @@ final class IntegrationTest extends TestCase
 
         $productId = 2;
 
-        $order = new BentoOrder($productId, 'bento', 2, [], 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 2, [], $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -371,7 +371,7 @@ final class IntegrationTest extends TestCase
 
         $order = $this->getLatestOrders(1)[0];
         $expected = [
-            'price' => 1480,
+            'price' => 1580,
         ];
         foreach ($expected as $field => $expectedValue) {
             $this->assertSame($expectedValue, $order[$field]);
@@ -388,7 +388,7 @@ final class IntegrationTest extends TestCase
 
         $productId = 1;
 
-        $order = new BentoOrder($productId, 'bento', 2, [], 750, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 2, [], $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -397,7 +397,7 @@ final class IntegrationTest extends TestCase
 
         $order = $this->getLatestOrders(1)[0];
         $expected = [
-            'price' => 1500,
+            'price' => 1600,
         ];
         foreach ($expected as $field => $expectedValue) {
             $this->assertSame($expectedValue, $order[$field]);
@@ -414,7 +414,7 @@ final class IntegrationTest extends TestCase
 
         $productId = 2;
 
-        $order = new BentoOrder($productId, 'bento', 1, [], 850, $db, false, true, true, 15, 'cash');
+        $order = new BentoOrder($productId, 1, [], $db, false, true, true, 15, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -439,7 +439,7 @@ final class IntegrationTest extends TestCase
         $productId = 1;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         $orderManager->finalizeOrders();
@@ -455,7 +455,7 @@ final class IntegrationTest extends TestCase
 
         $orderManager = new BentoOrderManager();
 
-        $order = new BentoOrder(1, 'bento', 1, [], 800, $db, false, false, true, null, 'cash');
+        $order = new BentoOrder(1, 1, [], $db, false, false, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -478,7 +478,7 @@ final class IntegrationTest extends TestCase
 
         $orderManager = new BentoOrderManager(true);
 
-        $order = new BentoOrder(6, 'souzai', 1, [], 200, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder(6, 1, [], $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -501,9 +501,9 @@ final class IntegrationTest extends TestCase
 
         $orderManager = new BentoOrderManager();
 
-        $order = new BentoOrder(1, 'bento', 1, [], 800, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder(1, 1, [], $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
-        $order = new BentoOrder(9, 'bento', 1, [], 650, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder(9, 1, [], $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -528,7 +528,7 @@ final class IntegrationTest extends TestCase
 
         $orderManager = new BentoOrderManager();
 
-        $order = new BentoOrder(1, 'bento', 3, [4], 800, $db, false, true, false, null, 'cash');
+        $order = new BentoOrder(1, 3, [4], $db, false, true, false, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -551,7 +551,7 @@ final class IntegrationTest extends TestCase
 
         $orderManager = new BentoOrderManager(true);
 
-        $order = new BentoOrder(4, 'bento', 1, [], 900, $db, false, true, false, null, 'cash');
+        $order = new BentoOrder(4, 1, [], $db, false, true, false, null, 'cash');
         $orderManager->addOrder($order);
 
         $orderManager->finalizeOrders(true);
@@ -581,7 +581,7 @@ final class IntegrationTest extends TestCase
         $productId = 8;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 4500, $db, false, true, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, true, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -606,7 +606,7 @@ final class IntegrationTest extends TestCase
         $productId = 8;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 4500, $db, false, true, true, 17, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, true, true, 17, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -631,7 +631,7 @@ final class IntegrationTest extends TestCase
         $productId = 8;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 4500, $db, false, true, true, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, true, true, null, 'cash');
         $orderManager->addOrder($order);
 
         ob_start();
@@ -657,7 +657,7 @@ final class IntegrationTest extends TestCase
         $productId = 8;
         $customizationIds = [];
 
-        $order = new BentoOrder($productId, 'bento', 1, $customizationIds, 4500, $db, false, false, false, null, 'cash');
+        $order = new BentoOrder($productId, 1, $customizationIds, $db, false, false, false, null, 'cash');
         $orderManager->addOrder($order);
 
         $orderManager->finalizeOrders();

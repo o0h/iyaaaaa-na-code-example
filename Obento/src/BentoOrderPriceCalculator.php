@@ -9,42 +9,32 @@ use Cake\Chronos\Chronos;
 class BentoOrderPriceCalculator
 {
     private $db;
-    private $productId; // 商品ID
     private $quantity;
     private $customizationIds;
     private $isVipCustomer;
     private $isPreOrder;
-    private $productType;
 
     private bool $voucherApplied = false;
-    private $basePrice;
 
-    public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false)
+    public function __construct(private BentoData $bento, $quantity, $customizationIds, BentoDB $db, $isVipCustomer = false, $isPreOrder = false)
     {
-        $this->productId = $productId;
-        $this->productType = $productType;
         $this->quantity = $quantity;
         $this->customizationIds = $customizationIds;
         $this->db = $db;
         $this->isVipCustomer = $isVipCustomer;
         $this->isPreOrder = $isPreOrder;
-        $this->basePrice = $basePrice;
     }
 
     public function calculateTotalPrice()
     {
-        $productInfo = $this->db->getProductInfo($this->productId);
-        $productType = $productInfo['product_type'];
-        $basePrice = $this->getBasePrice();
-
-        $totalPrice = $basePrice * $this->quantity;
+        $totalPrice = $this->bento->basePrice * $this->quantity;
         $hasTea = false;
 
         foreach ($this->customizationIds as $i => $customizationId) {
-            if (BentoDB::BENTO_KARAAGE_TOKUDAI_ID === $this->productId && BentoDB::CUSTOMIZE_GOHAN_OOMORI_ID === $customizationId) {
+            if (BentoDB::BENTO_KARAAGE_TOKUDAI_ID === $this->bento->id && BentoDB::CUSTOMIZE_GOHAN_OOMORI_ID === $customizationId) {
                 continue;
             }
-            if ($productType === 'bento' && $customizationId === BentoDB::CUSTOMIZE_OCHA_ID) {
+            if ($this->bento->type === 'bento' && $customizationId === BentoDB::CUSTOMIZE_OCHA_ID) {
                 $hasTea = true;
             }
             $customizationPrice = $this->db->getCustomizationPrice($customizationId);
@@ -53,10 +43,10 @@ class BentoOrderPriceCalculator
         if ($this->isVipCustomer) {
             $totalPrice *= 0.95;
         }
-        if ($this->quantity >= 5 && 'bento' === $this->productType) {
+        if ($this->quantity >= 5 && 'bento' === $this->bento->type) {
             $totalPrice -= 300;
         }
-        if ($productInfo['sale_flag'] && !$this->isPreOrder && $this->isTimeSale()) {
+        if ($this->bento->saleFlag && !$this->isPreOrder && $this->isTimeSale()) {
             $totalPrice -= 120;
         }
 
@@ -73,15 +63,12 @@ class BentoOrderPriceCalculator
 
     public function getBasePrice()
     {
-        return $this->basePrice;
+        return $this->bento->basePrice;
     }
 
     public function isVoucherApplicable()
     {
-        $productInfo = $this->db->getProductInfo($this->productId);
-        $basePrice = $productInfo['price'];
-
-        return $basePrice <= 800 && 'bento' === $this->productType && !$this->isTimeSale();
+        return $this->bento->basePrice <= 800 && 'bento' === $this->bento->type && !$this->isTimeSale();
     }
 
     public function applyVoucher(): void
