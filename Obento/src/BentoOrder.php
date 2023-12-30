@@ -49,47 +49,6 @@ class BentoOrder
         return $currentStock - $reservedStock >= $this->quantity;
     }
 
-    public function calculateTotalPrice()
-    {
-        $productInfo = $this->db->getProductInfo($this->productId);
-        $productType = $productInfo['product_type'];
-        $basePrice = $this->getBasePrice();
-
-        $totalPrice = $basePrice * $this->quantity;
-        $hasTea = false;
-
-        foreach ($this->customizationIds as $i => $customizationId) {
-            if (BentoDB::BENTO_KARAAGE_TOKUDAI_ID === $this->productId && BentoDB::CUSTOMIZE_GOHAN_OOMORI_ID === $customizationId) {
-                continue;
-            }
-            if (!$this->db->isValidCustomization($this->productId, $customizationId)) {
-                unset($this->customizationIds[$i]);
-
-                continue;
-            }
-            if ($productType === 'bento' && $customizationId === BentoDB::CUSTOMIZE_OCHA_ID) {
-                $hasTea = true;
-            }
-            $customizationPrice = $this->db->getCustomizationPrice($customizationId);
-            $totalPrice += $customizationPrice * $this->quantity;
-        }
-        if ($this->isVipCustomer) {
-            $totalPrice *= 0.95;
-        }
-        if ($this->quantity >= 5 && 'bento' === $this->productType) {
-            $totalPrice -= 300;
-        }
-        if ($productInfo['sale_flag'] && !$this->isPreOrder && $this->isTimeSale()) {
-            $totalPrice -= 120;
-        }
-
-        if ($hasTea) {
-            $totalPrice -= 50;
-        }
-
-        return (int)ceil($totalPrice);
-    }
-
     public function registerOrder(): void
     {
         if ($this->isOrderAcceptable()) {
