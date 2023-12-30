@@ -8,7 +8,7 @@ class BentoOrderValidator
 {
     public function __construct(private $productId, private int $quantity, private bool $isPreOrder, private BentoDB $db) {}
 
-    public function isOrderAcceptable()
+    public function isAcceptable()
     {
         if ($this->db->isReservationOnly($this->productId) && !$this->isPreOrder) {
             return false;
