@@ -10,23 +10,19 @@ class BentoOrder
     private $productId; // 商品ID
     private $quantity;
     private $customizationIds;
-    private $isVipCustomer;
     private $isPreOrder;
     private $needsChopsticks;
     private $pickupTime;
     private $paymentMethod;
-    private $productType;
 
     private BentoOrderPriceCalculator $calculator;
 
     public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
     {
         $this->productId = $productId;
-        $this->productType = $productType;
         $this->quantity = $quantity;
         $this->customizationIds = $customizationIds;
         $this->db = $db;
-        $this->isVipCustomer = $isVipCustomer;
         $this->isPreOrder = $isPreOrder;
         $this->needsChopsticks = $needsChopsticks;
         $this->pickupTime = $pickupTime;
@@ -39,12 +35,12 @@ class BentoOrder
         }
         $this->calculator = new BentoOrderPriceCalculator(
             $this->productId,
-            $this->productType,
+            $productType,
             $this->quantity,
             $this->customizationIds,
             $basePrice,
             $this->db,
-            $this->isVipCustomer,
+            $isVipCustomer,
             $this->isPreOrder,
         );
     }
