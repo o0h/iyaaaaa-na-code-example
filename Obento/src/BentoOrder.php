@@ -16,6 +16,7 @@ class BentoOrder
     private $paymentMethod;
 
     private BentoOrderPriceCalculator $calculator;
+    private BentoOrderValidator $validator;
 
     public function __construct($productId, $productType, $quantity, $customizationIds, $basePrice, BentoDB $db, $isVipCustomer = false, $isPreOrder = false, $needsChopsticks = false, $pickupTime = null, $paymentMethod = 'cash')
     {
@@ -33,6 +34,9 @@ class BentoOrder
                 unset($this->customizationIds[$i]);
             }
         }
+
+        $this->validator = new BentoOrderValidator($productId, $quantity, $isPreOrder, $db);
+
         $this->calculator = new BentoOrderPriceCalculator(
             $this->productId,
             $productType,
@@ -47,14 +51,7 @@ class BentoOrder
 
     public function isOrderAcceptable()
     {
-        if ($this->db->isReservationOnly($this->productId) && !$this->isPreOrder) {
-            return false;
-        }
-        $stockData = $this->db->getStock($this->productId);
-        $currentStock = $stockData['stock'] ?? 0;
-        $reservedStock = $stockData['reserved_stock'] ?? 0;
-
-        return $currentStock - $reservedStock >= $this->quantity;
+        return $this->validator->isAcceptable();
     }
 
     public function registerOrder(): void
