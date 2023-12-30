@@ -97,10 +97,7 @@ class BentoOrder
 
     public function isVoucherApplicable()
     {
-        $productInfo = $this->db->getProductInfo($this->productId);
-        $basePrice = $productInfo['price'];
-
-        return $basePrice <= 800 && 'bento' === $this->productType && !$this->isTimeSale();
+        return $this->calculator->isVoucherApplicable();
     }
 
     public function applyVoucher(): void
