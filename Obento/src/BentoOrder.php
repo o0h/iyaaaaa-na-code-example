@@ -30,7 +30,8 @@ class BentoOrder
         $this->pickupTime = $pickupTime;
         $this->paymentMethod = $paymentMethod;
 
-        $this->customizationIds = $this->filterAcceptableCustomizationIds($productId, $customizationIds);
+        $customizationFilter = new CustomizationFilter($this->db);
+        $this->customizationIds = $customizationFilter->onlyValid($this->productId, $customizationIds);
 
         $this->validator = new BentoOrderValidator($productId, $quantity, $isPreOrder, $db);
 
@@ -89,16 +90,5 @@ class BentoOrder
     public function applyVoucher(): void
     {
         $this->calculator->applyVoucher();
-    }
-
-    private function filterAcceptableCustomizationIds($productId, $customizationIds)
-    {
-        foreach ($customizationIds as $i => $customizationId) {
-            if (!$this->db->isValidCustomization($productId, $customizationId)) {
-                unset($customizationIds[$i]);
-            }
-        }
-
-        return array_values($customizationIds);
     }
 }
