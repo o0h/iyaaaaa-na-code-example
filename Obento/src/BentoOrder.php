@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace O0h\Obento;
 
-use Cake\Chronos\Chronos;
-
 class BentoOrder
 {
     private $db;
@@ -19,7 +17,6 @@ class BentoOrder
     private $paymentMethod;
     private $productType;
 
-    private bool $voucherApplied = false;
     private $basePrice;
     private BentoOrderPriceCalculator $calculator;
 
@@ -103,14 +100,5 @@ class BentoOrder
     public function applyVoucher(): void
     {
         $this->calculator->applyVoucher();
-    }
-
-    private function isTimeSale()
-    {
-        $now = Chronos::now();
-        $currentHour = $now->format('H');
-        $currentWeekDay = $now->format('N');
-
-        return ($currentHour >= 14 && $currentHour <= 16) && ($currentWeekDay >= 1 && $currentWeekDay <= 5);
     }
 }
